@@ -3,14 +3,13 @@ package main
 import (
 	"log"
 	"net/rpc"
-	"net/rpc/jsonrpc"
 	"time"
 
 	"github.com/gkettani/event-streaming-platform/pkg/common"
 )
 
 func main() {
-	client, err := jsonrpc.Dial("tcp", "localhost:1234")
+	client, err := rpc.DialHTTP("tcp", "localhost:1234")
 	if err != nil {
 		log.Fatal("Error connecting to server:", err)
 	}
@@ -27,9 +26,10 @@ func main() {
 }
 
 func sendMessage(client *rpc.Client, msg common.Message) {
-	var reply struct{}
+	var reply common.Message
 	err := client.Call("Server.Send", msg, &reply)
 	if err != nil {
 		log.Println("Error sending message:", err)
 	}
+	log.Printf("Message Ack: Offset=%d\n", reply.Offset)
 }

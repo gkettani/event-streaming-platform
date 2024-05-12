@@ -27,7 +27,7 @@ func main() {
 	http.Serve(l, nil)
 }
 
-func (s *Server) Send(msg common.Message, reply *struct{}) error {
+func (s *Server) Send(msg common.Message, reply *common.Message) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -37,6 +37,11 @@ func (s *Server) Send(msg common.Message, reply *struct{}) error {
 
 	// Store message in the log
 	s.messages[msg.Offset] = msg
+
+	*reply = common.Message{
+		Type:   "send_ack",
+		Offset: msg.Offset,
+	}
 
 	// Log the sent message
 	log.Printf("Sent message: Offset=%d, Type=%s, Key=%s, Msg=%d\n", msg.Offset, msg.Type, msg.Key, msg.Msg)
