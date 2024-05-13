@@ -12,7 +12,7 @@ import (
 
 func main() {
 	server := &Server{
-		messages: make(map[int]common.Message),
+		messages: make(map[int]common.MessageBody),
 		offset:   1,
 	}
 
@@ -27,7 +27,7 @@ func main() {
 	http.Serve(l, nil)
 }
 
-func (s *Server) Send(msg common.Message, reply *common.Message) error {
+func (s *Server) Send(msg common.MessageBody, reply *common.MessageBody) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -38,7 +38,7 @@ func (s *Server) Send(msg common.Message, reply *common.Message) error {
 	// Store message in the log
 	s.messages[msg.Offset] = msg
 
-	*reply = common.Message{
+	*reply = common.MessageBody{
 		Type:   "send_ack",
 		Offset: msg.Offset,
 	}
@@ -49,7 +49,7 @@ func (s *Server) Send(msg common.Message, reply *common.Message) error {
 	return nil
 }
 
-func (s *Server) Poll(offset int, reply *common.Message) error {
+func (s *Server) Poll(offset int, reply *common.MessageBody) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -64,7 +64,7 @@ func (s *Server) Poll(offset int, reply *common.Message) error {
 }
 
 type Server struct {
-	messages map[int]common.Message // Log of messages
-	offset   int                    // Current offset in the log
-	mu       sync.Mutex             // Mutex for thread-safe access to messages and offset
+	messages map[int]common.MessageBody // Log of messages
+	offset   int                        // Current offset in the log
+	mu       sync.Mutex                 // Mutex for thread-safe access to messages and offset
 }

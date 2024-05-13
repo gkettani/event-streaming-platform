@@ -24,11 +24,11 @@ func main() {
 	}
 }
 
-func retrieveMessage(client *rpc.Client, offset int) (common.Message, error) {
-	var msg common.Message
+func retrieveMessage(client *rpc.Client, offset int) (common.MessageBody, error) {
+	var msg common.MessageBody
 	err := client.Call("Server.Poll", offset, &msg)
 	if err != nil {
-		return common.Message{}, err
+		return common.MessageBody{}, err
 	}
 	return msg, nil
 }

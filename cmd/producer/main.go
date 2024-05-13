@@ -15,7 +15,7 @@ func main() {
 	}
 
 	for {
-		msg := common.Message{
+		msg := common.MessageBody{
 			Type: "send",
 			Key:  "k1",
 			Msg:  123,
@@ -25,8 +25,8 @@ func main() {
 	}
 }
 
-func sendMessage(client *rpc.Client, msg common.Message) {
-	var reply common.Message
+func sendMessage(client *rpc.Client, msg common.MessageBody) {
+	var reply common.MessageBody
 	err := client.Call("Server.Send", msg, &reply)
 	if err != nil {
 		log.Println("Error sending message:", err)
