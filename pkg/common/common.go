@@ -1,6 +1,8 @@
 package common
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 // Message represents a message sent from Src node to Dest node.
 // The body is stored as unparsed JSON so the handler can parse it itself.
@@ -15,13 +17,4 @@ type MessageBody struct {
 	Key    string `json:"key,omitempty"`
 	Msg    int    `json:"msg,omitempty"`
 	Offset int    `json:"offset,omitempty"`
-}
-
-type Node struct {
-	Addr string `json:"addr"`
-}
-
-// TODO: Implement the SyncRPC method
-func (n *Node) SyncRPC(any, any, any) (Message, error) {
-	return Message{}, nil
 }
