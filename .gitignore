@@ -1,1 +1,9 @@
+# Ignore the bin directory
 bin/
+*.txt
+
+# Ignore the logs directory
+logs/
+
+# gRPC generated files
+*.pb.go

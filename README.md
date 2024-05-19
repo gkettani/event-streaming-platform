@@ -1,54 +1,41 @@
 ## Description
-This is a simple example of a event streaming system implemented in Go. The idea is to build a distributed version using multi-nodes and leverage the power of Go's concurrency model. RPC is used to communicate between nodes. 
+This is a simple event streaming platform implemented using a replicated log service inspired from Kafka. The log service is pretty basic and uses RAFT consensus algorithm for replication. Nodes work in clusters. The communication between nodes is done using gRPC. The goal is to build a distributed event streaming system that is fault-tolerant and highly available. The logs are stored using an on-disk key-value store for persistence.
 
 ## Usage
-Run server
+Step1: Install the dependencies
 ```bash
-go run cmd/server/main.go
+go mod tidy
 ```
 
-Run producer
+Step 2: gRPC code generation
 ```bash
-go run cmd/producer/main.go
+./pkg/api/build.sh
 ```
 
-Run consumer
+Step 3: Define the configuration of the cluster in the `config/config.yaml` file.
+
+Step 4: Start the nodes in the cluster by running the following command on each node:
 ```bash
-go run cmd/consumer/main.go
+go run cmd/main.go
 ```
 
-## Specifications:
-1. **Communication Protocol:** The application uses RPC (Remote Procedure Call) over TCP for communication between the server, producer, and consumer.
+Step 5:
+Run clients (work in progress)
 
-2. **Message Format:** Messages exchanged between components are encoded in JSON format.
+## Specifications
+- Log Replication: The system should replicate the log across all nodes in the cluster to ensure consistency.
+- Leader Election: The system should elect a leader node to coordinate log replication and client requests.
+- Fault Tolerance: The system should be able to tolerate failures of individual nodes without losing data.
+- High Availability: The system should be able to continue operating even if some nodes are unavailable.
+- Scalability: The system should be able to scale horizontally by adding more nodes to the cluster.
+- Persistence: The log should be stored on disk to ensure durability in case of node failures.
+- Consistency: The system should provide strong consistency guarantees for reads and writes.
+- Performance: The system should be able to handle a high volume of requests with low latency.
+- Client API: The system should provide a simple API for clients to interact with the log service. It should provide a simple SDK.
+- Monitoring: The system should provide monitoring and metrics to track the health and performance of the cluster.
+- Testing: The system should be thoroughly tested to ensure correctness and reliability. It should include unit tests, integration tests, and stress tests. It should also include fault injection tests to validate the fault tolerance of the system. It should also include performance tests to measure the throughput and latency of the system under different workloads.
 
-3. **Server:** The server maintains a log of messages and provides two RPC methods:
-- *Send:* Accepts a message from the producer, assigns it an offset, stores it in the log, and returns an acknowledgment.
-- *Poll:* Accepts an offset from the consumer, retrieves the corresponding message from the log, and returns it.
-
-4. **Producer:** The producer periodically sends messages to the server using the Send RPC method.
-
-5. **Consumer:** The consumer periodically polls messages from the server using the Poll RPC method.
-
-6. **Log:** The log is a simple in-memory data structure that stores messages in the order they were received. Each message is assigned an offset that corresponds to its position in the log.
-
-## Features
-1. Message Sending: The producer can send messages to the server, which are then stored in the log.
-
-2. Message Retrieval: The consumer can retrieve messages from the server using the message offset.
-
-3. Offset Management: The server assigns a unique offset to each message it receives, allowing consumers to retrieve messages by their offset.
-
-4. Concurrency: The server handles concurrent access to the message log using a mutex to ensure thread safety.
-
-5. Error Handling: The application handles errors gracefully, providing appropriate error messages and responses when encountered.
-
-## Checklist
-- [x] Implement a simple event streaming system
-- [x] Implement a simple producer
-- [x] Implement a simple consumer
-- [ ] Use goroutines for concurrency
-- [ ] Distributed version
-- [ ] Partitioning
-- [ ] Fault tolerance
-- [ ] High availability
+### references
+1. [RAFT website](https://raft.github.io)
+2. [RAFT paper](https://raft.github.io/raft.pdf)
+3. [KAFKA paper](https://notes.stephenholiday.com/Kafka.pdf)

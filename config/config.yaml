@@ -1,0 +1,24 @@
+nodes:
+  - node_id: 1
+    peers:
+      - localhost:5001
+      - localhost:5002
+    log_dir: logs/node1
+    heartbeat_interval: 50
+    rpc_port: 5000
+
+  - node_id: 2
+    peers:
+      - localhost:5000
+      - localhost:5002
+    log_dir: logs/node2
+    heartbeat_interval: 50
+    rpc_port: 5001
+
+  - node_id: 3
+    peers:
+      - localhost:5000
+      - localhost:5001
+    log_dir: logs/node3
+    heartbeat_interval: 50
+    rpc_port: 5002
