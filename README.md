@@ -14,7 +14,7 @@ Step 2: gRPC code generation
 
 Step 3: Define the configuration of the cluster in the `config/config.yaml` file.
 
-Step 4: Start the nodes in the cluster by running the following command on each node:
+Step 4: Start the nodes in the cluster:
 ```bash
 go run cmd/main.go
 ```
